@@ -1,0 +1,59 @@
+.performers-array {
+    & > div {
+        display: flex;
+        margin-bottom: 10px;
+
+        .MuiSvgIcon-root {
+            align-self: center;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.performers-actions {
+    display: flex;
+    & > div {
+        margin-bottom: 10px;
+
+        .MuiSvgIcon-root {
+            align-self: center;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.without-margin-bottom {
+    & > .form-group {
+        margin-bottom: 0;
+    }
+}
+
+.flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.margin-bottom {
+    margin-bottom: 5px;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+
+    & > * {
+        margin-right: 5px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+

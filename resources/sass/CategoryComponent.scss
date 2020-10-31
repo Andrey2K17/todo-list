@@ -1,0 +1,44 @@
+.category-components {
+    display: flex;
+    align-items: flex-start;
+
+    .form {
+        min-width: 300px;
+        padding: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .form-control {
+        margin-bottom: 8px;
+    }
+
+    .card {
+        min-width: 300px;
+        margin-right: 10px;
+    }
+
+    .card-header {
+        & > div {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .card-body {
+        .list-group {
+            margin-bottom: 8px
+        }
+    }
+
+    &-icon {
+        margin: 5px
+    }
+
+    &-inline {
+        display: flex;
+
+        .MuiSvgIcon-root {
+            align-self: center;
+        }
+    }
+}
