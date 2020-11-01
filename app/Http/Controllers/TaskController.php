@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Performer;
+use App\PerformerAction;
 use App\Task;
 use Illuminate\Http\Request;
 
@@ -28,8 +30,20 @@ class TaskController extends Controller
     {
         $newTask = Task::create([
             'date' => $request->date,
-            'category_id' => $request->category_id,
+            'category_id' => $request->categoryId,
         ]);
+
+        $newPerformers = [];
+        foreach ($request->performers as $performer) {
+            $newPerformers[] = new Performer($performer);
+        }
+        $newTask->performers()->saveMany($newPerformers);
+
+        $newPerformerActions = [];
+        foreach ($request->performerActions as $performerAction) {
+            $newPerformerActions[] = new PerformerAction($performerAction);
+        }
+        $newTask->performers()->saveMany($newPerformerActions);
 
         if($newTask) {
             return response()->json(['status' => 200, 'taskId'=>$newTask->id]);
@@ -44,6 +58,8 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
+        $task->performerActions;
+        $task->performers;
         return response()->json($task);
     }
 
@@ -66,7 +82,13 @@ class TaskController extends Controller
     {
         $newTask = Task::find($id);
         $newTask->date = $request->date;
-        $newTask->category_id = $request->category_id;
+        $newTask->category_id = $request->categoryId;
+        $newPerformers = [];
+        foreach ($request->performers as $performer) {
+            $id = $performer['id'];
+            array_push($newPerformers, Performer::find($id));
+        }
+        $newTask->performers()->saveMany($newPerformers);
         if($newTask->save()) {
             return response()->json(['status' => 200, 'taskId'=>$id]);
         }

@@ -38233,38 +38233,6 @@ module.exports = arrayLikeKeys;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_arrayMap.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/_arrayMap.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * A specialized version of `_.map` for arrays without support for iteratee
- * shorthands.
- *
- * @private
- * @param {Array} [array] The array to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Array} Returns the new mapped array.
- */
-function arrayMap(array, iteratee) {
-  var index = -1,
-      length = array == null ? 0 : array.length,
-      result = Array(length);
-
-  while (++index < length) {
-    result[index] = iteratee(array[index], index, array);
-  }
-  return result;
-}
-
-module.exports = arrayMap;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_arrayPush.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_arrayPush.js ***!
@@ -38362,76 +38330,6 @@ module.exports = assocIndexOf;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseFindIndex.js":
-/*!***********************************************!*\
-  !*** ./node_modules/lodash/_baseFindIndex.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * The base implementation of `_.findIndex` and `_.findLastIndex` without
- * support for iteratee shorthands.
- *
- * @private
- * @param {Array} array The array to inspect.
- * @param {Function} predicate The function invoked per iteration.
- * @param {number} fromIndex The index to search from.
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {number} Returns the index of the matched value, else `-1`.
- */
-function baseFindIndex(array, predicate, fromIndex, fromRight) {
-  var length = array.length,
-      index = fromIndex + (fromRight ? 1 : -1);
-
-  while ((fromRight ? index-- : ++index < length)) {
-    if (predicate(array[index], index, array)) {
-      return index;
-    }
-  }
-  return -1;
-}
-
-module.exports = baseFindIndex;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseGet.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/_baseGet.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var castPath = __webpack_require__(/*! ./_castPath */ "./node_modules/lodash/_castPath.js"),
-    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
-
-/**
- * The base implementation of `_.get` without support for default values.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {Array|string} path The path of the property to get.
- * @returns {*} Returns the resolved value.
- */
-function baseGet(object, path) {
-  path = castPath(path, object);
-
-  var index = 0,
-      length = path.length;
-
-  while (object != null && index < length) {
-    object = object[toKey(path[index++])];
-  }
-  return (index && index == length) ? object : undefined;
-}
-
-module.exports = baseGet;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseGetAllKeys.js":
 /*!************************************************!*\
   !*** ./node_modules/lodash/_baseGetAllKeys.js ***!
@@ -38498,30 +38396,6 @@ function baseGetTag(value) {
 }
 
 module.exports = baseGetTag;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseHasIn.js":
-/*!*******************************************!*\
-  !*** ./node_modules/lodash/_baseHasIn.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * The base implementation of `_.hasIn` without support for deep paths.
- *
- * @private
- * @param {Object} [object] The object to query.
- * @param {Array|string} key The key to check.
- * @returns {boolean} Returns `true` if `key` exists, else `false`.
- */
-function baseHasIn(object, key) {
-  return object != null && key in Object(object);
-}
-
-module.exports = baseHasIn;
 
 
 /***/ }),
@@ -38688,79 +38562,6 @@ module.exports = baseIsEqualDeep;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseIsMatch.js":
-/*!*********************************************!*\
-  !*** ./node_modules/lodash/_baseIsMatch.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Stack = __webpack_require__(/*! ./_Stack */ "./node_modules/lodash/_Stack.js"),
-    baseIsEqual = __webpack_require__(/*! ./_baseIsEqual */ "./node_modules/lodash/_baseIsEqual.js");
-
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG = 1,
-    COMPARE_UNORDERED_FLAG = 2;
-
-/**
- * The base implementation of `_.isMatch` without support for iteratee shorthands.
- *
- * @private
- * @param {Object} object The object to inspect.
- * @param {Object} source The object of property values to match.
- * @param {Array} matchData The property names, values, and compare flags to match.
- * @param {Function} [customizer] The function to customize comparisons.
- * @returns {boolean} Returns `true` if `object` is a match, else `false`.
- */
-function baseIsMatch(object, source, matchData, customizer) {
-  var index = matchData.length,
-      length = index,
-      noCustomizer = !customizer;
-
-  if (object == null) {
-    return !length;
-  }
-  object = Object(object);
-  while (index--) {
-    var data = matchData[index];
-    if ((noCustomizer && data[2])
-          ? data[1] !== object[data[0]]
-          : !(data[0] in object)
-        ) {
-      return false;
-    }
-  }
-  while (++index < length) {
-    data = matchData[index];
-    var key = data[0],
-        objValue = object[key],
-        srcValue = data[1];
-
-    if (noCustomizer && data[2]) {
-      if (objValue === undefined && !(key in object)) {
-        return false;
-      }
-    } else {
-      var stack = new Stack;
-      if (customizer) {
-        var result = customizer(objValue, srcValue, key, object, source, stack);
-      }
-      if (!(result === undefined
-            ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack)
-            : result
-          )) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-module.exports = baseIsMatch;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseIsNative.js":
 /*!**********************************************!*\
   !*** ./node_modules/lodash/_baseIsNative.js ***!
@@ -38890,48 +38691,6 @@ module.exports = baseIsTypedArray;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseIteratee.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_baseIteratee.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseMatches = __webpack_require__(/*! ./_baseMatches */ "./node_modules/lodash/_baseMatches.js"),
-    baseMatchesProperty = __webpack_require__(/*! ./_baseMatchesProperty */ "./node_modules/lodash/_baseMatchesProperty.js"),
-    identity = __webpack_require__(/*! ./identity */ "./node_modules/lodash/identity.js"),
-    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js"),
-    property = __webpack_require__(/*! ./property */ "./node_modules/lodash/property.js");
-
-/**
- * The base implementation of `_.iteratee`.
- *
- * @private
- * @param {*} [value=_.identity] The value to convert to an iteratee.
- * @returns {Function} Returns the iteratee.
- */
-function baseIteratee(value) {
-  // Don't store the `typeof` result in a variable to avoid a JIT bug in Safari 9.
-  // See https://bugs.webkit.org/show_bug.cgi?id=156034 for more details.
-  if (typeof value == 'function') {
-    return value;
-  }
-  if (value == null) {
-    return identity;
-  }
-  if (typeof value == 'object') {
-    return isArray(value)
-      ? baseMatchesProperty(value[0], value[1])
-      : baseMatches(value);
-  }
-  return property(value);
-}
-
-module.exports = baseIteratee;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseKeys.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_baseKeys.js ***!
@@ -38973,135 +38732,6 @@ module.exports = baseKeys;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_baseMatches.js":
-/*!*********************************************!*\
-  !*** ./node_modules/lodash/_baseMatches.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsMatch = __webpack_require__(/*! ./_baseIsMatch */ "./node_modules/lodash/_baseIsMatch.js"),
-    getMatchData = __webpack_require__(/*! ./_getMatchData */ "./node_modules/lodash/_getMatchData.js"),
-    matchesStrictComparable = __webpack_require__(/*! ./_matchesStrictComparable */ "./node_modules/lodash/_matchesStrictComparable.js");
-
-/**
- * The base implementation of `_.matches` which doesn't clone `source`.
- *
- * @private
- * @param {Object} source The object of property values to match.
- * @returns {Function} Returns the new spec function.
- */
-function baseMatches(source) {
-  var matchData = getMatchData(source);
-  if (matchData.length == 1 && matchData[0][2]) {
-    return matchesStrictComparable(matchData[0][0], matchData[0][1]);
-  }
-  return function(object) {
-    return object === source || baseIsMatch(object, source, matchData);
-  };
-}
-
-module.exports = baseMatches;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseMatchesProperty.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/lodash/_baseMatchesProperty.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIsEqual = __webpack_require__(/*! ./_baseIsEqual */ "./node_modules/lodash/_baseIsEqual.js"),
-    get = __webpack_require__(/*! ./get */ "./node_modules/lodash/get.js"),
-    hasIn = __webpack_require__(/*! ./hasIn */ "./node_modules/lodash/hasIn.js"),
-    isKey = __webpack_require__(/*! ./_isKey */ "./node_modules/lodash/_isKey.js"),
-    isStrictComparable = __webpack_require__(/*! ./_isStrictComparable */ "./node_modules/lodash/_isStrictComparable.js"),
-    matchesStrictComparable = __webpack_require__(/*! ./_matchesStrictComparable */ "./node_modules/lodash/_matchesStrictComparable.js"),
-    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
-
-/** Used to compose bitmasks for value comparisons. */
-var COMPARE_PARTIAL_FLAG = 1,
-    COMPARE_UNORDERED_FLAG = 2;
-
-/**
- * The base implementation of `_.matchesProperty` which doesn't clone `srcValue`.
- *
- * @private
- * @param {string} path The path of the property to get.
- * @param {*} srcValue The value to match.
- * @returns {Function} Returns the new spec function.
- */
-function baseMatchesProperty(path, srcValue) {
-  if (isKey(path) && isStrictComparable(srcValue)) {
-    return matchesStrictComparable(toKey(path), srcValue);
-  }
-  return function(object) {
-    var objValue = get(object, path);
-    return (objValue === undefined && objValue === srcValue)
-      ? hasIn(object, path)
-      : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
-  };
-}
-
-module.exports = baseMatchesProperty;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseProperty.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_baseProperty.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * The base implementation of `_.property` without support for deep paths.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @returns {Function} Returns the new accessor function.
- */
-function baseProperty(key) {
-  return function(object) {
-    return object == null ? undefined : object[key];
-  };
-}
-
-module.exports = baseProperty;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_basePropertyDeep.js":
-/*!**************************************************!*\
-  !*** ./node_modules/lodash/_basePropertyDeep.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGet = __webpack_require__(/*! ./_baseGet */ "./node_modules/lodash/_baseGet.js");
-
-/**
- * A specialized version of `baseProperty` which supports deep paths.
- *
- * @private
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new accessor function.
- */
-function basePropertyDeep(path) {
-  return function(object) {
-    return baseGet(object, path);
-  };
-}
-
-module.exports = basePropertyDeep;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_baseTimes.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_baseTimes.js ***!
@@ -39129,54 +38759,6 @@ function baseTimes(n, iteratee) {
 }
 
 module.exports = baseTimes;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_baseToString.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_baseToString.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Symbol = __webpack_require__(/*! ./_Symbol */ "./node_modules/lodash/_Symbol.js"),
-    arrayMap = __webpack_require__(/*! ./_arrayMap */ "./node_modules/lodash/_arrayMap.js"),
-    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js"),
-    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
-
-/** Used as references for various `Number` constants. */
-var INFINITY = 1 / 0;
-
-/** Used to convert symbols to primitives and strings. */
-var symbolProto = Symbol ? Symbol.prototype : undefined,
-    symbolToString = symbolProto ? symbolProto.toString : undefined;
-
-/**
- * The base implementation of `_.toString` which doesn't convert nullish
- * values to empty strings.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {string} Returns the string.
- */
-function baseToString(value) {
-  // Exit early for strings to avoid a performance hit in some environments.
-  if (typeof value == 'string') {
-    return value;
-  }
-  if (isArray(value)) {
-    // Recursively convert values (susceptible to call stack limits).
-    return arrayMap(value, baseToString) + '';
-  }
-  if (isSymbol(value)) {
-    return symbolToString ? symbolToString.call(value) : '';
-  }
-  var result = (value + '');
-  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
-}
-
-module.exports = baseToString;
 
 
 /***/ }),
@@ -39230,38 +38812,6 @@ module.exports = cacheHas;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_castPath.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/_castPath.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js"),
-    isKey = __webpack_require__(/*! ./_isKey */ "./node_modules/lodash/_isKey.js"),
-    stringToPath = __webpack_require__(/*! ./_stringToPath */ "./node_modules/lodash/_stringToPath.js"),
-    toString = __webpack_require__(/*! ./toString */ "./node_modules/lodash/toString.js");
-
-/**
- * Casts `value` to a path array if it's not one.
- *
- * @private
- * @param {*} value The value to inspect.
- * @param {Object} [object] The object to query keys on.
- * @returns {Array} Returns the cast property path array.
- */
-function castPath(value, object) {
-  if (isArray(value)) {
-    return value;
-  }
-  return isKey(value, object) ? [value] : stringToPath(toString(value));
-}
-
-module.exports = castPath;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_coreJsData.js":
 /*!********************************************!*\
   !*** ./node_modules/lodash/_coreJsData.js ***!
@@ -39275,42 +38825,6 @@ var root = __webpack_require__(/*! ./_root */ "./node_modules/lodash/_root.js");
 var coreJsData = root['__core-js_shared__'];
 
 module.exports = coreJsData;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_createFind.js":
-/*!********************************************!*\
-  !*** ./node_modules/lodash/_createFind.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseIteratee = __webpack_require__(/*! ./_baseIteratee */ "./node_modules/lodash/_baseIteratee.js"),
-    isArrayLike = __webpack_require__(/*! ./isArrayLike */ "./node_modules/lodash/isArrayLike.js"),
-    keys = __webpack_require__(/*! ./keys */ "./node_modules/lodash/keys.js");
-
-/**
- * Creates a `_.find` or `_.findLast` function.
- *
- * @private
- * @param {Function} findIndexFunc The function to find the collection index.
- * @returns {Function} Returns the new find function.
- */
-function createFind(findIndexFunc) {
-  return function(collection, predicate, fromIndex) {
-    var iterable = Object(collection);
-    if (!isArrayLike(collection)) {
-      var iteratee = baseIteratee(predicate, 3);
-      collection = keys(collection);
-      predicate = function(key) { return iteratee(iterable[key], key, iterable); };
-    }
-    var index = findIndexFunc(collection, predicate, fromIndex);
-    return index > -1 ? iterable[iteratee ? collection[index] : index] : undefined;
-  };
-}
-
-module.exports = createFind;
 
 
 /***/ }),
@@ -39706,41 +39220,6 @@ module.exports = getMapData;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_getMatchData.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_getMatchData.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isStrictComparable = __webpack_require__(/*! ./_isStrictComparable */ "./node_modules/lodash/_isStrictComparable.js"),
-    keys = __webpack_require__(/*! ./keys */ "./node_modules/lodash/keys.js");
-
-/**
- * Gets the property names, values, and compare flags of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the match data of `object`.
- */
-function getMatchData(object) {
-  var result = keys(object),
-      length = result.length;
-
-  while (length--) {
-    var key = result[length],
-        value = object[key];
-
-    result[length] = [key, value, isStrictComparable(value)];
-  }
-  return result;
-}
-
-module.exports = getMatchData;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_getNative.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_getNative.js ***!
@@ -39960,56 +39439,6 @@ module.exports = getValue;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_hasPath.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/_hasPath.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var castPath = __webpack_require__(/*! ./_castPath */ "./node_modules/lodash/_castPath.js"),
-    isArguments = __webpack_require__(/*! ./isArguments */ "./node_modules/lodash/isArguments.js"),
-    isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js"),
-    isIndex = __webpack_require__(/*! ./_isIndex */ "./node_modules/lodash/_isIndex.js"),
-    isLength = __webpack_require__(/*! ./isLength */ "./node_modules/lodash/isLength.js"),
-    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
-
-/**
- * Checks if `path` exists on `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {Array|string} path The path to check.
- * @param {Function} hasFunc The function to check properties.
- * @returns {boolean} Returns `true` if `path` exists, else `false`.
- */
-function hasPath(object, path, hasFunc) {
-  path = castPath(path, object);
-
-  var index = -1,
-      length = path.length,
-      result = false;
-
-  while (++index < length) {
-    var key = toKey(path[index]);
-    if (!(result = object != null && hasFunc(object, key))) {
-      break;
-    }
-    object = object[key];
-  }
-  if (result || ++index != length) {
-    return result;
-  }
-  length = object == null ? 0 : object.length;
-  return !!length && isLength(length) && isIndex(key, length) &&
-    (isArray(object) || isArguments(object));
-}
-
-module.exports = hasPath;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_hashClear.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_hashClear.js ***!
@@ -40209,46 +39638,6 @@ module.exports = isIndex;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_isKey.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash/_isKey.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isArray = __webpack_require__(/*! ./isArray */ "./node_modules/lodash/isArray.js"),
-    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
-
-/** Used to match property names within property paths. */
-var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
-    reIsPlainProp = /^\w*$/;
-
-/**
- * Checks if `value` is a property name and not a property path.
- *
- * @private
- * @param {*} value The value to check.
- * @param {Object} [object] The object to query keys on.
- * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
- */
-function isKey(value, object) {
-  if (isArray(value)) {
-    return false;
-  }
-  var type = typeof value;
-  if (type == 'number' || type == 'symbol' || type == 'boolean' ||
-      value == null || isSymbol(value)) {
-    return true;
-  }
-  return reIsPlainProp.test(value) || !reIsDeepProp.test(value) ||
-    (object != null && value in Object(object));
-}
-
-module.exports = isKey;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_isKeyable.js":
 /*!*******************************************!*\
   !*** ./node_modules/lodash/_isKeyable.js ***!
@@ -40331,32 +39720,6 @@ function isPrototype(value) {
 }
 
 module.exports = isPrototype;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_isStrictComparable.js":
-/*!****************************************************!*\
-  !*** ./node_modules/lodash/_isStrictComparable.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js");
-
-/**
- * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` if suitable for strict
- *  equality comparisons, else `false`.
- */
-function isStrictComparable(value) {
-  return value === value && !isObject(value);
-}
-
-module.exports = isStrictComparable;
 
 
 /***/ }),
@@ -40698,74 +40061,6 @@ function mapToArray(map) {
 }
 
 module.exports = mapToArray;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_matchesStrictComparable.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/lodash/_matchesStrictComparable.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * A specialized version of `matchesProperty` for source values suitable
- * for strict equality comparisons, i.e. `===`.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @param {*} srcValue The value to match.
- * @returns {Function} Returns the new spec function.
- */
-function matchesStrictComparable(key, srcValue) {
-  return function(object) {
-    if (object == null) {
-      return false;
-    }
-    return object[key] === srcValue &&
-      (srcValue !== undefined || (key in Object(object)));
-  };
-}
-
-module.exports = matchesStrictComparable;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_memoizeCapped.js":
-/*!***********************************************!*\
-  !*** ./node_modules/lodash/_memoizeCapped.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var memoize = __webpack_require__(/*! ./memoize */ "./node_modules/lodash/memoize.js");
-
-/** Used as the maximum memoize cache size. */
-var MAX_MEMOIZE_SIZE = 500;
-
-/**
- * A specialized version of `_.memoize` which clears the memoized function's
- * cache when it exceeds `MAX_MEMOIZE_SIZE`.
- *
- * @private
- * @param {Function} func The function to have its output memoized.
- * @returns {Function} Returns the new memoized function.
- */
-function memoizeCapped(func) {
-  var result = memoize(func, function(key) {
-    if (cache.size === MAX_MEMOIZE_SIZE) {
-      cache.clear();
-    }
-    return key;
-  });
-
-  var cache = result.cache;
-  return result;
-}
-
-module.exports = memoizeCapped;
 
 
 /***/ }),
@@ -41159,76 +40454,6 @@ module.exports = stackSet;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/_stringToPath.js":
-/*!**********************************************!*\
-  !*** ./node_modules/lodash/_stringToPath.js ***!
-  \**********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var memoizeCapped = __webpack_require__(/*! ./_memoizeCapped */ "./node_modules/lodash/_memoizeCapped.js");
-
-/** Used to match property names within property paths. */
-var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-
-/** Used to match backslashes in property paths. */
-var reEscapeChar = /\\(\\)?/g;
-
-/**
- * Converts `string` to a property path array.
- *
- * @private
- * @param {string} string The string to convert.
- * @returns {Array} Returns the property path array.
- */
-var stringToPath = memoizeCapped(function(string) {
-  var result = [];
-  if (string.charCodeAt(0) === 46 /* . */) {
-    result.push('');
-  }
-  string.replace(rePropName, function(match, number, quote, subString) {
-    result.push(quote ? subString.replace(reEscapeChar, '$1') : (number || match));
-  });
-  return result;
-});
-
-module.exports = stringToPath;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/_toKey.js":
-/*!***************************************!*\
-  !*** ./node_modules/lodash/_toKey.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
-
-/** Used as references for various `Number` constants. */
-var INFINITY = 1 / 0;
-
-/**
- * Converts `value` to a string key if it's not a string or symbol.
- *
- * @private
- * @param {*} value The value to inspect.
- * @returns {string|symbol} Returns the key.
- */
-function toKey(value) {
-  if (typeof value == 'string' || isSymbol(value)) {
-    return value;
-  }
-  var result = (value + '');
-  return (result == '0' && (1 / value) == -INFINITY) ? '-0' : result;
-}
-
-module.exports = toKey;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/_toSource.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_toSource.js ***!
@@ -41310,246 +40535,6 @@ function eq(value, other) {
 }
 
 module.exports = eq;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/find.js":
-/*!*************************************!*\
-  !*** ./node_modules/lodash/find.js ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var createFind = __webpack_require__(/*! ./_createFind */ "./node_modules/lodash/_createFind.js"),
-    findIndex = __webpack_require__(/*! ./findIndex */ "./node_modules/lodash/findIndex.js");
-
-/**
- * Iterates over elements of `collection`, returning the first element
- * `predicate` returns truthy for. The predicate is invoked with three
- * arguments: (value, index|key, collection).
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Collection
- * @param {Array|Object} collection The collection to inspect.
- * @param {Function} [predicate=_.identity] The function invoked per iteration.
- * @param {number} [fromIndex=0] The index to search from.
- * @returns {*} Returns the matched element, else `undefined`.
- * @example
- *
- * var users = [
- *   { 'user': 'barney',  'age': 36, 'active': true },
- *   { 'user': 'fred',    'age': 40, 'active': false },
- *   { 'user': 'pebbles', 'age': 1,  'active': true }
- * ];
- *
- * _.find(users, function(o) { return o.age < 40; });
- * // => object for 'barney'
- *
- * // The `_.matches` iteratee shorthand.
- * _.find(users, { 'age': 1, 'active': true });
- * // => object for 'pebbles'
- *
- * // The `_.matchesProperty` iteratee shorthand.
- * _.find(users, ['active', false]);
- * // => object for 'fred'
- *
- * // The `_.property` iteratee shorthand.
- * _.find(users, 'active');
- * // => object for 'barney'
- */
-var find = createFind(findIndex);
-
-module.exports = find;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/findIndex.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/findIndex.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseFindIndex = __webpack_require__(/*! ./_baseFindIndex */ "./node_modules/lodash/_baseFindIndex.js"),
-    baseIteratee = __webpack_require__(/*! ./_baseIteratee */ "./node_modules/lodash/_baseIteratee.js"),
-    toInteger = __webpack_require__(/*! ./toInteger */ "./node_modules/lodash/toInteger.js");
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeMax = Math.max;
-
-/**
- * This method is like `_.find` except that it returns the index of the first
- * element `predicate` returns truthy for instead of the element itself.
- *
- * @static
- * @memberOf _
- * @since 1.1.0
- * @category Array
- * @param {Array} array The array to inspect.
- * @param {Function} [predicate=_.identity] The function invoked per iteration.
- * @param {number} [fromIndex=0] The index to search from.
- * @returns {number} Returns the index of the found element, else `-1`.
- * @example
- *
- * var users = [
- *   { 'user': 'barney',  'active': false },
- *   { 'user': 'fred',    'active': false },
- *   { 'user': 'pebbles', 'active': true }
- * ];
- *
- * _.findIndex(users, function(o) { return o.user == 'barney'; });
- * // => 0
- *
- * // The `_.matches` iteratee shorthand.
- * _.findIndex(users, { 'user': 'fred', 'active': false });
- * // => 1
- *
- * // The `_.matchesProperty` iteratee shorthand.
- * _.findIndex(users, ['active', false]);
- * // => 0
- *
- * // The `_.property` iteratee shorthand.
- * _.findIndex(users, 'active');
- * // => 2
- */
-function findIndex(array, predicate, fromIndex) {
-  var length = array == null ? 0 : array.length;
-  if (!length) {
-    return -1;
-  }
-  var index = fromIndex == null ? 0 : toInteger(fromIndex);
-  if (index < 0) {
-    index = nativeMax(length + index, 0);
-  }
-  return baseFindIndex(array, baseIteratee(predicate, 3), index);
-}
-
-module.exports = findIndex;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/get.js":
-/*!************************************!*\
-  !*** ./node_modules/lodash/get.js ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGet = __webpack_require__(/*! ./_baseGet */ "./node_modules/lodash/_baseGet.js");
-
-/**
- * Gets the value at `path` of `object`. If the resolved value is
- * `undefined`, the `defaultValue` is returned in its place.
- *
- * @static
- * @memberOf _
- * @since 3.7.0
- * @category Object
- * @param {Object} object The object to query.
- * @param {Array|string} path The path of the property to get.
- * @param {*} [defaultValue] The value returned for `undefined` resolved values.
- * @returns {*} Returns the resolved value.
- * @example
- *
- * var object = { 'a': [{ 'b': { 'c': 3 } }] };
- *
- * _.get(object, 'a[0].b.c');
- * // => 3
- *
- * _.get(object, ['a', '0', 'b', 'c']);
- * // => 3
- *
- * _.get(object, 'a.b.c', 'default');
- * // => 'default'
- */
-function get(object, path, defaultValue) {
-  var result = object == null ? undefined : baseGet(object, path);
-  return result === undefined ? defaultValue : result;
-}
-
-module.exports = get;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/hasIn.js":
-/*!**************************************!*\
-  !*** ./node_modules/lodash/hasIn.js ***!
-  \**************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseHasIn = __webpack_require__(/*! ./_baseHasIn */ "./node_modules/lodash/_baseHasIn.js"),
-    hasPath = __webpack_require__(/*! ./_hasPath */ "./node_modules/lodash/_hasPath.js");
-
-/**
- * Checks if `path` is a direct or inherited property of `object`.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Object
- * @param {Object} object The object to query.
- * @param {Array|string} path The path to check.
- * @returns {boolean} Returns `true` if `path` exists, else `false`.
- * @example
- *
- * var object = _.create({ 'a': _.create({ 'b': 2 }) });
- *
- * _.hasIn(object, 'a');
- * // => true
- *
- * _.hasIn(object, 'a.b');
- * // => true
- *
- * _.hasIn(object, ['a', 'b']);
- * // => true
- *
- * _.hasIn(object, 'b');
- * // => false
- */
-function hasIn(object, path) {
-  return object != null && hasPath(object, path, baseHasIn);
-}
-
-module.exports = hasIn;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/identity.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/identity.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * This method returns the first argument it receives.
- *
- * @static
- * @since 0.1.0
- * @memberOf _
- * @category Util
- * @param {*} value Any value.
- * @returns {*} Returns `value`.
- * @example
- *
- * var object = { 'a': 1 };
- *
- * console.log(_.identity(object) === object);
- * // => true
- */
-function identity(value) {
-  return value;
-}
-
-module.exports = identity;
 
 
 /***/ }),
@@ -41950,46 +40935,6 @@ function isObjectLike(value) {
 }
 
 module.exports = isObjectLike;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/isSymbol.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/isSymbol.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "./node_modules/lodash/_baseGetTag.js"),
-    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "./node_modules/lodash/isObjectLike.js");
-
-/** `Object#toString` result references. */
-var symbolTag = '[object Symbol]';
-
-/**
- * Checks if `value` is classified as a `Symbol` primitive or object.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
- * @example
- *
- * _.isSymbol(Symbol.iterator);
- * // => true
- *
- * _.isSymbol('abc');
- * // => false
- */
-function isSymbol(value) {
-  return typeof value == 'symbol' ||
-    (isObjectLike(value) && baseGetTag(value) == symbolTag);
-}
-
-module.exports = isSymbol;
 
 
 /***/ }),
@@ -59245,133 +58190,6 @@ module.exports = keys;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/memoize.js":
-/*!****************************************!*\
-  !*** ./node_modules/lodash/memoize.js ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var MapCache = __webpack_require__(/*! ./_MapCache */ "./node_modules/lodash/_MapCache.js");
-
-/** Error message constants. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/**
- * Creates a function that memoizes the result of `func`. If `resolver` is
- * provided, it determines the cache key for storing the result based on the
- * arguments provided to the memoized function. By default, the first argument
- * provided to the memoized function is used as the map cache key. The `func`
- * is invoked with the `this` binding of the memoized function.
- *
- * **Note:** The cache is exposed as the `cache` property on the memoized
- * function. Its creation may be customized by replacing the `_.memoize.Cache`
- * constructor with one whose instances implement the
- * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
- * method interface of `clear`, `delete`, `get`, `has`, and `set`.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Function
- * @param {Function} func The function to have its output memoized.
- * @param {Function} [resolver] The function to resolve the cache key.
- * @returns {Function} Returns the new memoized function.
- * @example
- *
- * var object = { 'a': 1, 'b': 2 };
- * var other = { 'c': 3, 'd': 4 };
- *
- * var values = _.memoize(_.values);
- * values(object);
- * // => [1, 2]
- *
- * values(other);
- * // => [3, 4]
- *
- * object.a = 2;
- * values(object);
- * // => [1, 2]
- *
- * // Modify the result cache.
- * values.cache.set(object, ['a', 'b']);
- * values(object);
- * // => ['a', 'b']
- *
- * // Replace `_.memoize.Cache`.
- * _.memoize.Cache = WeakMap;
- */
-function memoize(func, resolver) {
-  if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  var memoized = function() {
-    var args = arguments,
-        key = resolver ? resolver.apply(this, args) : args[0],
-        cache = memoized.cache;
-
-    if (cache.has(key)) {
-      return cache.get(key);
-    }
-    var result = func.apply(this, args);
-    memoized.cache = cache.set(key, result) || cache;
-    return result;
-  };
-  memoized.cache = new (memoize.Cache || MapCache);
-  return memoized;
-}
-
-// Expose `MapCache`.
-memoize.Cache = MapCache;
-
-module.exports = memoize;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/property.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/property.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseProperty = __webpack_require__(/*! ./_baseProperty */ "./node_modules/lodash/_baseProperty.js"),
-    basePropertyDeep = __webpack_require__(/*! ./_basePropertyDeep */ "./node_modules/lodash/_basePropertyDeep.js"),
-    isKey = __webpack_require__(/*! ./_isKey */ "./node_modules/lodash/_isKey.js"),
-    toKey = __webpack_require__(/*! ./_toKey */ "./node_modules/lodash/_toKey.js");
-
-/**
- * Creates a function that returns the value at `path` of a given object.
- *
- * @static
- * @memberOf _
- * @since 2.4.0
- * @category Util
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new accessor function.
- * @example
- *
- * var objects = [
- *   { 'a': { 'b': 2 } },
- *   { 'a': { 'b': 1 } }
- * ];
- *
- * _.map(objects, _.property('a.b'));
- * // => [2, 1]
- *
- * _.map(_.sortBy(objects, _.property(['a', 'b'])), 'a.b');
- * // => [1, 2]
- */
-function property(path) {
-  return isKey(path) ? baseProperty(toKey(path)) : basePropertyDeep(path);
-}
-
-module.exports = property;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/stubArray.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/stubArray.js ***!
@@ -59431,222 +58249,6 @@ function stubFalse() {
 }
 
 module.exports = stubFalse;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/toFinite.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/toFinite.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toNumber = __webpack_require__(/*! ./toNumber */ "./node_modules/lodash/toNumber.js");
-
-/** Used as references for various `Number` constants. */
-var INFINITY = 1 / 0,
-    MAX_INTEGER = 1.7976931348623157e+308;
-
-/**
- * Converts `value` to a finite number.
- *
- * @static
- * @memberOf _
- * @since 4.12.0
- * @category Lang
- * @param {*} value The value to convert.
- * @returns {number} Returns the converted number.
- * @example
- *
- * _.toFinite(3.2);
- * // => 3.2
- *
- * _.toFinite(Number.MIN_VALUE);
- * // => 5e-324
- *
- * _.toFinite(Infinity);
- * // => 1.7976931348623157e+308
- *
- * _.toFinite('3.2');
- * // => 3.2
- */
-function toFinite(value) {
-  if (!value) {
-    return value === 0 ? value : 0;
-  }
-  value = toNumber(value);
-  if (value === INFINITY || value === -INFINITY) {
-    var sign = (value < 0 ? -1 : 1);
-    return sign * MAX_INTEGER;
-  }
-  return value === value ? value : 0;
-}
-
-module.exports = toFinite;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/toInteger.js":
-/*!******************************************!*\
-  !*** ./node_modules/lodash/toInteger.js ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toFinite = __webpack_require__(/*! ./toFinite */ "./node_modules/lodash/toFinite.js");
-
-/**
- * Converts `value` to an integer.
- *
- * **Note:** This method is loosely based on
- * [`ToInteger`](http://www.ecma-international.org/ecma-262/7.0/#sec-tointeger).
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to convert.
- * @returns {number} Returns the converted integer.
- * @example
- *
- * _.toInteger(3.2);
- * // => 3
- *
- * _.toInteger(Number.MIN_VALUE);
- * // => 0
- *
- * _.toInteger(Infinity);
- * // => 1.7976931348623157e+308
- *
- * _.toInteger('3.2');
- * // => 3
- */
-function toInteger(value) {
-  var result = toFinite(value),
-      remainder = result % 1;
-
-  return result === result ? (remainder ? result - remainder : result) : 0;
-}
-
-module.exports = toInteger;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/toNumber.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/toNumber.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
-    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
-
-/** Used as references for various `Number` constants. */
-var NAN = 0 / 0;
-
-/** Used to match leading and trailing whitespace. */
-var reTrim = /^\s+|\s+$/g;
-
-/** Used to detect bad signed hexadecimal string values. */
-var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-/** Used to detect binary string values. */
-var reIsBinary = /^0b[01]+$/i;
-
-/** Used to detect octal string values. */
-var reIsOctal = /^0o[0-7]+$/i;
-
-/** Built-in method references without a dependency on `root`. */
-var freeParseInt = parseInt;
-
-/**
- * Converts `value` to a number.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to process.
- * @returns {number} Returns the number.
- * @example
- *
- * _.toNumber(3.2);
- * // => 3.2
- *
- * _.toNumber(Number.MIN_VALUE);
- * // => 5e-324
- *
- * _.toNumber(Infinity);
- * // => Infinity
- *
- * _.toNumber('3.2');
- * // => 3.2
- */
-function toNumber(value) {
-  if (typeof value == 'number') {
-    return value;
-  }
-  if (isSymbol(value)) {
-    return NAN;
-  }
-  if (isObject(value)) {
-    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-    value = isObject(other) ? (other + '') : other;
-  }
-  if (typeof value != 'string') {
-    return value === 0 ? value : +value;
-  }
-  value = value.replace(reTrim, '');
-  var isBinary = reIsBinary.test(value);
-  return (isBinary || reIsOctal.test(value))
-    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-    : (reIsBadHex.test(value) ? NAN : +value);
-}
-
-module.exports = toNumber;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/toString.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/toString.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseToString = __webpack_require__(/*! ./_baseToString */ "./node_modules/lodash/_baseToString.js");
-
-/**
- * Converts `value` to a string. An empty string is returned for `null`
- * and `undefined` values. The sign of `-0` is preserved.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to convert.
- * @returns {string} Returns the converted string.
- * @example
- *
- * _.toString(null);
- * // => ''
- *
- * _.toString(-0);
- * // => '-0'
- *
- * _.toString([1, 2, 3]);
- * // => '1,2,3'
- */
-function toString(value) {
-  return value == null ? '' : baseToString(value);
-}
-
-module.exports = toString;
 
 
 /***/ }),
@@ -105288,10 +103890,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AddElement__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./AddElement */ "./resources/js/components/AddElement.js");
 /* harmony import */ var _EditModal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./EditModal */ "./resources/js/components/EditModal.js");
 /* harmony import */ var _EditTaskForm__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./EditTaskForm */ "./resources/js/components/EditTaskForm.js");
-/* harmony import */ var lodash_find__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash/find */ "./node_modules/lodash/find.js");
-/* harmony import */ var lodash_find__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_find__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var lodash_isEqual__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash/isEqual */ "./node_modules/lodash/isEqual.js");
-/* harmony import */ var lodash_isEqual__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash_isEqual__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var lodash_isEqual__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash/isEqual */ "./node_modules/lodash/isEqual.js");
+/* harmony import */ var lodash_isEqual__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash_isEqual__WEBPACK_IMPORTED_MODULE_8__);
 
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -105335,7 +103935,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-
 var App1 = /*#__PURE__*/function (_React$Component) {
   _inherits(App1, _React$Component);
 
@@ -105368,20 +103967,14 @@ var App1 = /*#__PURE__*/function (_React$Component) {
             case 2:
               res = _context.sent;
 
-              if (!(res.data.status === 200)) {
-                _context.next = 7;
-                break;
+              if (res.data.status === 200) {
+                _this.setState({
+                  categories: res.data.categories,
+                  loading: false
+                });
               }
 
-              _this.setState({
-                categories: res.data.categories,
-                loading: false
-              });
-
-              _context.next = 7;
-              return _this.fetchTasks();
-
-            case 7:
+            case 4:
             case "end":
               return _context.stop();
           }
@@ -105604,51 +104197,103 @@ var App1 = /*#__PURE__*/function (_React$Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_this), "fetchTasks", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8() {
-      var categories;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
-        while (1) {
-          switch (_context8.prev = _context8.next) {
-            case 0:
-              categories = _this.state.categories.slice();
-              _context8.next = 3;
-              return _this.state.categories.map(function (category) {
-                var index = _this.state.categories.findIndex(function (item) {
-                  return item.id === category.id;
-                });
+    _defineProperty(_assertThisInitialized(_this), "onClickAddTask", /*#__PURE__*/function () {
+      var _ref8 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8(task, categoryId) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                console.log('cc', task);
 
-                axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/category/".concat(category.id, "/tasks")).then(function (res) {
-                  categories[index] = _objectSpread(_objectSpread({}, categories[index]), {}, {
-                    tasks: res.data.tasks
-                  });
-                }).then(function () {
+                if (!task.id) {
+                  _context8.next = 6;
+                  break;
+                }
+
+                _context8.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/task/".concat(task.id)).then(function (res) {
                   return _this.setState({
-                    categories: categories
+                    isShowModal: !_this.state.isShowModal,
+                    currentTask: {
+                      id: task.id,
+                      date: res.data.date,
+                      performers: res.data.performers,
+                      categoryId: res.data.category_id,
+                      performerActions: res.data.performer_actions
+                    }
                   });
                 });
-              });
 
-            case 3:
-            case "end":
-              return _context8.stop();
+              case 4:
+                _context8.next = 7;
+                break;
+
+              case 6:
+                _this.setState({
+                  isShowModal: !_this.state.isShowModal,
+                  currentTask: {
+                    categoryId: categoryId
+                  }
+                });
+
+              case 7:
+              case "end":
+                return _context8.stop();
+            }
           }
-        }
-      }, _callee8);
-    })));
+        }, _callee8);
+      }));
 
-    _defineProperty(_assertThisInitialized(_this), "fetchPerformers", /*#__PURE__*/function () {
+      return function (_x10, _x11) {
+        return _ref8.apply(this, arguments);
+      };
+    }());
+
+    _defineProperty(_assertThisInitialized(_this), "onSaveTask", /*#__PURE__*/function () {
       var _ref9 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee9(task) {
+        var res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
-                _context9.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/task/".concat(task.id, "/performers"));
+                console.log('te', task);
 
-              case 2:
-                return _context9.abrupt("return", _context9.sent);
+                if (!task.id) {
+                  _context9.next = 7;
+                  break;
+                }
 
-              case 3:
+                _context9.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.patch("/task/".concat(task.id), task);
+
+              case 4:
+                _context9.t0 = _context9.sent;
+                _context9.next = 10;
+                break;
+
+              case 7:
+                _context9.next = 9;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/task", task);
+
+              case 9:
+                _context9.t0 = _context9.sent;
+
+              case 10:
+                res = _context9.t0;
+
+                if (!(res.data.status === 200)) {
+                  _context9.next = 15;
+                  break;
+                }
+
+                _this.setState({
+                  isShowModal: false
+                });
+
+                _context9.next = 15;
+                return _this.fetchCategories();
+
+              case 15:
               case "end":
                 return _context9.stop();
             }
@@ -105656,24 +104301,38 @@ var App1 = /*#__PURE__*/function (_React$Component) {
         }, _callee9);
       }));
 
-      return function (_x10) {
+      return function (_x12) {
         return _ref9.apply(this, arguments);
       };
     }());
 
-    _defineProperty(_assertThisInitialized(_this), "fetchPerformerActions", /*#__PURE__*/function () {
-      var _ref10 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee10(task) {
+    _defineProperty(_assertThisInitialized(_this), "onSavePerformer", /*#__PURE__*/function () {
+      var _ref10 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee10(performer, taskId) {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee10$(_context10) {
           while (1) {
             switch (_context10.prev = _context10.next) {
               case 0:
-                _context10.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("/task/".concat(task.id, "/performerActions"));
+                if (!performer.id) {
+                  _context10.next = 5;
+                  break;
+                }
 
-              case 2:
-                return _context10.abrupt("return", _context10.sent);
+                _context10.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.patch("/performer/".concat(performer.id), _objectSpread(_objectSpread({}, performer), {}, {
+                  task_id: taskId
+                }));
 
               case 3:
+                _context10.next = 7;
+                break;
+
+              case 5:
+                _context10.next = 7;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/performer", _objectSpread(_objectSpread({}, performer), {}, {
+                  task_id: taskId
+                }));
+
+              case 7:
               case "end":
                 return _context10.stop();
             }
@@ -105681,55 +104340,50 @@ var App1 = /*#__PURE__*/function (_React$Component) {
         }, _callee10);
       }));
 
-      return function (_x11) {
+      return function (_x13, _x14) {
         return _ref10.apply(this, arguments);
       };
     }());
 
-    _defineProperty(_assertThisInitialized(_this), "onClickAddTask", /*#__PURE__*/function () {
-      var _ref11 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee11(task, currentCategoryId) {
+    _defineProperty(_assertThisInitialized(_this), "onSavePerformerAction", /*#__PURE__*/function () {
+      var _ref11 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee11(performerAction, taskId) {
+        var isCompleted, data, res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee11$(_context11) {
           while (1) {
             switch (_context11.prev = _context11.next) {
               case 0:
-                if (!task.id) {
+                isCompleted = lodash_isEqual__WEBPACK_IMPORTED_MODULE_8___default()(performerAction.isCompleted, ["on"]) || lodash_isEqual__WEBPACK_IMPORTED_MODULE_8___default()(performerAction.isCompleted, [1]) ? 1 : 0;
+                data = _objectSpread(_objectSpread({}, performerAction), {}, {
+                  task_id: taskId,
+                  isCompleted: isCompleted
+                });
+
+                if (!performerAction.id) {
                   _context11.next = 8;
                   break;
                 }
 
-                _this.setState({
-                  task: task
-                });
+                _context11.next = 5;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.patch("/performerAction/".concat(performerAction.id), data);
 
-                _context11.next = 4;
-                return _this.fetchPerformerActions(task).then(function (res) {
-                  _this.setState({
-                    performerActions: res.data.performerActions
-                  });
-                });
-
-              case 4:
-                _context11.next = 6;
-                return _this.fetchPerformers(task).then(function (res) {
-                  _this.setState({
-                    isShowModal: !_this.state.isShowModal,
-                    performers: res.data.performers,
-                    currentCategoryId: currentCategoryId
-                  });
-                });
-
-              case 6:
-                _context11.next = 9;
+              case 5:
+                _context11.t0 = _context11.sent;
+                _context11.next = 11;
                 break;
 
               case 8:
-                _this.setState({
-                  isShowModal: !_this.state.isShowModal,
-                  task: task || {},
-                  currentCategoryId: currentCategoryId
-                });
+                _context11.next = 10;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/performerAction", data);
 
-              case 9:
+              case 10:
+                _context11.t0 = _context11.sent;
+
+              case 11:
+                res = _context11.t0;
+
+                if (res.data.status === 200) {}
+
+              case 13:
               case "end":
                 return _context11.stop();
             }
@@ -105737,185 +104391,8 @@ var App1 = /*#__PURE__*/function (_React$Component) {
         }, _callee11);
       }));
 
-      return function (_x12, _x13) {
-        return _ref11.apply(this, arguments);
-      };
-    }());
-
-    _defineProperty(_assertThisInitialized(_this), "onSaveTask", /*#__PURE__*/function () {
-      var _ref12 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee12(task) {
-        var taskId, res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee12$(_context12) {
-          while (1) {
-            switch (_context12.prev = _context12.next) {
-              case 0:
-                taskId = _this.state.task.id;
-
-                if (taskId) {
-                  _this.state.performers.map(function (performer) {
-                    var hasPerformer = lodash_find__WEBPACK_IMPORTED_MODULE_8___default()(task.performers, ['id', performer.id]);
-
-                    if (!hasPerformer) {
-                      _this.onDeletePerformer(performer.id);
-                    }
-                  });
-
-                  _this.state.performerActions.map(function (performerAction) {
-                    var hasPerformerAction = lodash_find__WEBPACK_IMPORTED_MODULE_8___default()(task.performerActions, ['id', performerAction.id]);
-
-                    if (!hasPerformerAction) {
-                      _this.onDeletePerformerAction(performerAction.id);
-                    }
-                  });
-                }
-
-                if (!taskId) {
-                  _context12.next = 8;
-                  break;
-                }
-
-                _context12.next = 5;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.patch("/task/".concat(taskId), _objectSpread(_objectSpread({}, task), {}, {
-                  category_id: _this.state.currentCategoryId
-                }));
-
-              case 5:
-                _context12.t0 = _context12.sent;
-                _context12.next = 11;
-                break;
-
-              case 8:
-                _context12.next = 10;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/task", _objectSpread(_objectSpread({}, task), {}, {
-                  category_id: _this.state.currentCategoryId
-                }));
-
-              case 10:
-                _context12.t0 = _context12.sent;
-
-              case 11:
-                res = _context12.t0;
-
-                if (!(res.data.status === 200)) {
-                  _context12.next = 18;
-                  break;
-                }
-
-                _this.setState({
-                  isShowModal: false,
-                  performers: [],
-                  performerActions: []
-                });
-
-                task.performers && task.performers.map(function (performer) {
-                  _this.onSavePerformer(performer, res.data.taskId);
-                });
-                task.performerActions && task.performerActions.map(function (performerAction) {
-                  _this.onSavePerformerAction(performerAction, res.data.taskId);
-                });
-                _context12.next = 18;
-                return _this.fetchTasks();
-
-              case 18:
-              case "end":
-                return _context12.stop();
-            }
-          }
-        }, _callee12);
-      }));
-
-      return function (_x14) {
-        return _ref12.apply(this, arguments);
-      };
-    }());
-
-    _defineProperty(_assertThisInitialized(_this), "onSavePerformer", /*#__PURE__*/function () {
-      var _ref13 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee13(performer, taskId) {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee13$(_context13) {
-          while (1) {
-            switch (_context13.prev = _context13.next) {
-              case 0:
-                if (!performer.id) {
-                  _context13.next = 5;
-                  break;
-                }
-
-                _context13.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.patch("/performer/".concat(performer.id), _objectSpread(_objectSpread({}, performer), {}, {
-                  task_id: taskId
-                }));
-
-              case 3:
-                _context13.next = 7;
-                break;
-
-              case 5:
-                _context13.next = 7;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/performer", _objectSpread(_objectSpread({}, performer), {}, {
-                  task_id: taskId
-                }));
-
-              case 7:
-              case "end":
-                return _context13.stop();
-            }
-          }
-        }, _callee13);
-      }));
-
       return function (_x15, _x16) {
-        return _ref13.apply(this, arguments);
-      };
-    }());
-
-    _defineProperty(_assertThisInitialized(_this), "onSavePerformerAction", /*#__PURE__*/function () {
-      var _ref14 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee14(performerAction, taskId) {
-        var isCompleted, data, res;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee14$(_context14) {
-          while (1) {
-            switch (_context14.prev = _context14.next) {
-              case 0:
-                isCompleted = lodash_isEqual__WEBPACK_IMPORTED_MODULE_9___default()(performerAction.isCompleted, ["on"]) || lodash_isEqual__WEBPACK_IMPORTED_MODULE_9___default()(performerAction.isCompleted, [1]) ? 1 : 0;
-                data = _objectSpread(_objectSpread({}, performerAction), {}, {
-                  task_id: taskId,
-                  isCompleted: isCompleted
-                });
-
-                if (!performerAction.id) {
-                  _context14.next = 8;
-                  break;
-                }
-
-                _context14.next = 5;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.patch("/performerAction/".concat(performerAction.id), data);
-
-              case 5:
-                _context14.t0 = _context14.sent;
-                _context14.next = 11;
-                break;
-
-              case 8:
-                _context14.next = 10;
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("/performerAction", data);
-
-              case 10:
-                _context14.t0 = _context14.sent;
-
-              case 11:
-                res = _context14.t0;
-
-                if (res.data.status === 200) {}
-
-              case 13:
-              case "end":
-                return _context14.stop();
-            }
-          }
-        }, _callee14);
-      }));
-
-      return function (_x17, _x18) {
-        return _ref14.apply(this, arguments);
+        return _ref11.apply(this, arguments);
       };
     }());
 
@@ -105930,7 +104407,8 @@ var App1 = /*#__PURE__*/function (_React$Component) {
       loading: true,
       currentTasks: [],
       performers: [],
-      performerActions: []
+      performerActions: [],
+      currentTask: {}
     };
     return _this;
   }
@@ -105950,15 +104428,8 @@ var App1 = /*#__PURE__*/function (_React$Component) {
           nameCategory = _this$state.nameCategory,
           isAddCategory = _this$state.isAddCategory,
           isShowModal = _this$state.isShowModal,
-          task = _this$state.task,
-          performers = _this$state.performers,
-          performerActions = _this$state.performerActions;
-
-      var initValues = _objectSpread(_objectSpread({}, task), {}, {
-        performers: performers,
-        performerActions: performerActions
-      });
-
+          currentTask = _this$state.currentTask;
+      console.log('currentTask', currentTask);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
         className: "category-components container mt-5"
       }, categories.map(function (category) {
@@ -105978,14 +104449,13 @@ var App1 = /*#__PURE__*/function (_React$Component) {
         isAdd: isAddCategory
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_EditModal__WEBPACK_IMPORTED_MODULE_6__["default"], {
         body: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_EditTaskForm__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          initValues: initValues,
+          initValues: this.state.currentTask,
           handleSubmit: this.onSaveTask,
           onDelete: this.onDeleteTask,
           onExit: function onExit() {
             return _this2.setState({
               isShowModal: false,
-              performers: [],
-              performerActions: []
+              currentTask: {}
             });
           }
         }),
@@ -106139,7 +104609,7 @@ var Category = /*#__PURE__*/function (_Component) {
           key: task.id,
           action: true,
           onClick: function onClick() {
-            return _onClick(task, category.id);
+            return _onClick(task);
           }
         }, task.date);
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {

@@ -74,7 +74,7 @@ export default class Category extends Component {
                                 <ListGroup.Item
                                     key={task.id}
                                     action
-                                    onClick={() => onClick(task, category.id)}
+                                    onClick={() => onClick(task)}
                                 >
                                     {task.date}
                                 </ListGroup.Item>))

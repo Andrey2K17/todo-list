@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::with(['tasks'])->get();
         return response()->json(['status' => 200, 'categories' => $categories]);
     }
 
@@ -46,14 +46,19 @@ class CategoryController extends Controller
 
     public function tasks(Category $category)
     {
-        return response()->json(['status' => 200, 'tasks' => $category->tasks()->get()]);
+        $tasks = $category->tasks()->get();
+        foreach ($tasks as $task) {
+            $task->performers;
+            $task->performerActions;
+        }
+        return response()->json(['status' => 200, 'tasks' => $tasks]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)

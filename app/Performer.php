@@ -11,6 +11,6 @@ class Performer extends Model
     protected $fillable = ['name', 'task_id'];
 
     public function task() {
-        return $this->hasOne(Task::class);
+        return $this->belongsTo(Task::class);
     }
 }

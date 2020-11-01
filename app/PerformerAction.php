@@ -11,6 +11,6 @@ class PerformerAction extends Model
     protected $fillable = ['startTime', 'endTime', 'action', 'isCompleted', 'task_id'];
 
     public function task() {
-        return $this->hasOne(Task::class);
+        return $this->belongsTo(Task::class);
     }
 }
