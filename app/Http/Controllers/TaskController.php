@@ -33,17 +33,22 @@ class TaskController extends Controller
             'category_id' => $request->categoryId,
         ]);
 
-        $newPerformers = [];
-        foreach ($request->performers as $performer) {
-            $newPerformers[] = new Performer($performer);
-        }
-        $newTask->performers()->saveMany($newPerformers);
 
-        $newPerformerActions = [];
-        foreach ($request->performerActions as $performerAction) {
-            $newPerformerActions[] = new PerformerAction($performerAction);
+        if ($request->performers) {
+            $newPerformers = [];
+            foreach ($request->performers as $performer) {
+                $newPerformers[] = new Performer($performer);
+            }
+            $newTask->performers()->saveMany($newPerformers);
         }
-        $newTask->performers()->saveMany($newPerformerActions);
+
+        if ($request->performerActions) {
+            $newPerformerActions = [];
+            foreach ($request->performerActions as $performerAction) {
+                $newPerformerActions[] = new PerformerAction($performerAction);
+            }
+            $newTask->performers()->saveMany($newPerformerActions);
+        }
 
         if($newTask) {
             return response()->json(['status' => 200, 'taskId'=>$newTask->id]);
@@ -83,20 +88,23 @@ class TaskController extends Controller
         $newTask = Task::find($id);
         $newTask->date = $request->date;
         $newTask->category_id = $request->categoryId;
-        foreach ($request->performers as $performer) {
-            $newPerformer = Performer::find($performer['id']);
-            $newPerformer->name = $performer['name'];
-            $newPerformer->save();
+        if ($request->performers) {
+            foreach ($request->performers as $performer) {
+                $newPerformer = Performer::find($performer['id']);
+                $newPerformer->name = $performer['name'];
+                $newPerformer->save();
+            }
         }
-        foreach ($request->performerActions as $performerAction) {
-            $newPerformerAction = PerformerAction::find($performerAction['id']);
-            $newPerformerAction->startTime = $performerAction['startTime'];
-            $newPerformerAction->endTime = $performerAction['endTime'];
-            $newPerformerAction->action = $performerAction['action'];
-            $newPerformerAction->isCompleted = $performerAction['isCompleted'];
-            $newPerformerAction->save();
+        if ($request->performerActions) {
+            foreach ($request->performerActions as $performerAction) {
+                $newPerformerAction = PerformerAction::find($performerAction['id']);
+                $newPerformerAction->startTime = $performerAction['startTime'];
+                $newPerformerAction->endTime = $performerAction['endTime'];
+                $newPerformerAction->action = $performerAction['action'];
+                $newPerformerAction->isCompleted = $performerAction['isCompleted'];
+                $newPerformerAction->save();
+            }
         }
-
         if($newTask->save()) {
             return response()->json(['status' => 200, 'taskId'=>$id]);
         }
