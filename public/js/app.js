@@ -105490,33 +105490,26 @@ var App1 = /*#__PURE__*/function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "onDeleteCategory", /*#__PURE__*/function () {
       var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(currentCategoryId) {
-        var category, res;
+        var res;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                category = lodash_find__WEBPACK_IMPORTED_MODULE_8___default()(_this.state.categories, ['id', currentCategoryId]);
-                _context4.next = 3;
-                return category.tasks.map(function (task) {
-                  return _this.onDeleteTask(task);
-                });
-
-              case 3:
-                _context4.next = 5;
+                _context4.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/category/".concat(currentCategoryId));
 
-              case 5:
+              case 2:
                 res = _context4.sent;
 
                 if (!(res.data.status === 200)) {
-                  _context4.next = 9;
+                  _context4.next = 6;
                   break;
                 }
 
-                _context4.next = 9;
+                _context4.next = 6;
                 return _this.fetchCategories();
 
-              case 9:
+              case 6:
               case "end":
                 return _context4.stop();
             }
@@ -105536,18 +105529,6 @@ var App1 = /*#__PURE__*/function (_React$Component) {
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.next = 2;
-                return _this.state.performers.map(function (performer) {
-                  return _this.onDeletePerformer(performer.id);
-                });
-
-              case 2:
-                _context5.next = 4;
-                return _this.state.performerActions.map(function (performerAction) {
-                  return _this.onDeletePerformerAction(performerAction.id);
-                });
-
-              case 4:
-                _context5.next = 6;
                 return axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/task/".concat(task.id)).then(function (res) {
                   if (res.data.status === 200) {
                     _this.setState({
@@ -105560,7 +105541,7 @@ var App1 = /*#__PURE__*/function (_React$Component) {
                   }
                 });
 
-              case 6:
+              case 2:
               case "end":
                 return _context5.stop();
             }

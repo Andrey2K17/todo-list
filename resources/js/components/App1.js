@@ -58,8 +58,6 @@ class App1 extends React.Component {
     }
 
     onDeleteCategory = async (currentCategoryId) => {
-        const category = _find(this.state.categories, ['id', currentCategoryId]);
-        await category.tasks.map((task) => this.onDeleteTask(task));
         const res = await axios.delete(`/category/${currentCategoryId}`);
         if (res.data.status === 200) {
             await this.fetchCategories();
@@ -67,8 +65,6 @@ class App1 extends React.Component {
     }
 
     onDeleteTask = async (task) => {
-        await this.state.performers.map((performer) => this.onDeletePerformer(performer.id));
-        await this.state.performerActions.map((performerAction) => this.onDeletePerformerAction(performerAction.id));
         await axios.delete(`/task/${task.id}`)
             .then((res) => {
                 if (res.data.status === 200) {

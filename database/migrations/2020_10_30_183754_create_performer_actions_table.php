@@ -19,7 +19,7 @@ class CreatePerformerActionsTable extends Migration
             $table->time('endTime', 0);
             $table->string('action');
             $table->boolean('isCompleted');
-            $table->foreignId('task_id')->constrained();
+            $table->foreignId('task_id')->constrained()->onDelete('cascade');
         });
     }
 
