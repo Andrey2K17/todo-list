@@ -81,7 +81,7 @@ const PerformerAction = ({values, handleChange}) => {
                                             id={`performerActions.${index}.isCompleted`}
                                             name={`performerActions.${index}.isCompleted`}
                                             type="checkbox"
-                                            checked={performerAction.isCompleted}
+                                            checked={performerAction.isCompleted === [] ? undefined : performerAction.isCompleted}
                                             onChange={handleChange}
                                         />
                                     </Form.Group>
@@ -137,7 +137,6 @@ const EditTaskForm = ({initValues, handleSubmit, onDelete, onExit}) => {
             initialValues={initValues}
             onSubmit={handleSubmit}
             render={({values, handleSubmit, handleChange}) => {
-
                 return (
                     <Form
                         onSubmit={handleSubmit}

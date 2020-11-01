@@ -83,12 +83,20 @@ class TaskController extends Controller
         $newTask = Task::find($id);
         $newTask->date = $request->date;
         $newTask->category_id = $request->categoryId;
-        $newPerformers = [];
         foreach ($request->performers as $performer) {
-            $id = $performer['id'];
-            array_push($newPerformers, Performer::find($id));
+            $newPerformer = Performer::find($performer['id']);
+            $newPerformer->name = $performer['name'];
+            $newPerformer->save();
         }
-        $newTask->performers()->saveMany($newPerformers);
+        foreach ($request->performerActions as $performerAction) {
+            $newPerformerAction = PerformerAction::find($performerAction['id']);
+            $newPerformerAction->startTime = $performerAction['startTime'];
+            $newPerformerAction->endTime = $performerAction['endTime'];
+            $newPerformerAction->action = $performerAction['action'];
+            $newPerformerAction->isCompleted = $performerAction['isCompleted'];
+            $newPerformerAction->save();
+        }
+
         if($newTask->save()) {
             return response()->json(['status' => 200, 'taskId'=>$id]);
         }

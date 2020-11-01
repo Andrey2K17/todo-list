@@ -15,7 +15,7 @@ class CreatePerformersTable extends Migration
     {
         Schema::create('performers', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->foreignId('task_id')->constrained()->onDelete('cascade');
         });
     }
