@@ -43,7 +43,6 @@ AddElement.propTypes = {
     setName: PropTypes.func,
     onClickAdd: PropTypes.func.isRequired,
     isAdd: PropTypes.bool.isRequired,
-    body: PropTypes.object,
     isModal: PropTypes.bool,
     tittleButton: PropTypes.string,
 }

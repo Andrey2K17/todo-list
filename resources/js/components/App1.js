@@ -5,7 +5,6 @@ import Category from "./Category";
 import AddElement from "./AddElement";
 import EditModal from "./EditModal";
 import EditTaskForm from "./EditTaskForm";
-import _isEqual from 'lodash/isEqual';
 
 class App1 extends React.Component {
     constructor() {
@@ -14,14 +13,7 @@ class App1 extends React.Component {
             categories: [],
             nameCategory: '',
             isAddCategory: true,
-            isAddTask: true,
-            currentCategoryId: '',
             isShowModal: false,
-            task: undefined,
-            loading: true,
-            currentTasks: [],
-            performers: [],
-            performerActions: [],
             currentTask: {},
         }
     }
@@ -34,7 +26,7 @@ class App1 extends React.Component {
     fetchCategories = async () => {
         const res = await axios.get("/category")
         if (res.data.status === 200) {
-            this.setState({categories: res.data.categories, loading: false})
+            this.setState({categories: res.data.categories})
         }
     }
 
@@ -50,14 +42,8 @@ class App1 extends React.Component {
         }
     }
 
-    onSavePerformer = async (performer, taskId) => {
-        performer.id
-            ? await axios.patch(`/performer/${performer.id}`, {...performer, task_id: taskId})
-            : await axios.post("/performer", {...performer, task_id: taskId})
-    }
-
-    onDeleteCategory = async (currentCategoryId) => {
-        const res = await axios.delete(`/category/${currentCategoryId}`);
+    onDeleteCategory = async (id) => {
+        const res = await axios.delete(`/category/${id}`);
         if (res.data.status === 200) {
             await this.fetchCategories();
         }
@@ -67,18 +53,10 @@ class App1 extends React.Component {
         await axios.delete(`/task/${task.id}`)
             .then((res) => {
                 if (res.data.status === 200) {
-                    this.setState({isShowModal: false, performers: [], performerActions: []});
+                    this.setState({isShowModal: false});
                     this.fetchCategories();
                 }
             });
-    }
-
-    onDeletePerformer = async (id) => {
-        await axios.delete(`/performer/${id}`);
-    }
-
-    onDeletePerformerAction = async (id) => {
-        await axios.delete(`/performerAction/${id}`);
     }
 
     onClickAddCategory = () => {
@@ -86,7 +64,6 @@ class App1 extends React.Component {
     }
 
     onClickAddTask = async (task, categoryId) => {
-        console.log('cc', task)
         if (task.id) {
             await axios.get(`/task/${task.id}`)
                 .then((res) => this.setState({
@@ -108,7 +85,7 @@ class App1 extends React.Component {
     }
 
     onSaveTask = async (task) => {
-        console.log('te', task);
+        console.log('a', task);
         const res = task.id
             ? await axios.patch(`/task/${task.id}`, task)
             : await axios.post("/task", task);
@@ -116,24 +93,6 @@ class App1 extends React.Component {
         if (res.data.status === 200) {
             this.setState({isShowModal: false});
             await this.fetchCategories();
-        }
-    }
-
-    onSavePerformer = async (performer, taskId) => {
-        performer.id
-            ? await axios.patch(`/performer/${performer.id}`, {...performer, task_id: taskId})
-            : await axios.post("/performer", {...performer, task_id: taskId})
-    }
-
-    onSavePerformerAction = async (performerAction, taskId) => {
-        const isCompleted = (_isEqual(performerAction.isCompleted, ["on"])
-            || _isEqual(performerAction.isCompleted, [1])) ? 1 : 0;
-
-        const data = {...performerAction, task_id: taskId, isCompleted};
-        const res = performerAction.id
-            ? await axios.patch(`/performerAction/${performerAction.id}`, data)
-            : await axios.post("/performerAction", data)
-        if (res.data.status === 200) {
         }
     }
 
@@ -147,9 +106,7 @@ class App1 extends React.Component {
             nameCategory,
             isAddCategory,
             isShowModal,
-            currentTask,
         } = this.state;
-        console.log('currentTask', currentTask);
         return (
             <div className="category-components container mt-5">
                 {
@@ -160,7 +117,7 @@ class App1 extends React.Component {
                                 category={category}
                                 onClick={this.onClickAddTask}
                                 isShowModal={isShowModal}
-                                onDelete={this.onDeleteCategory}
+                                onDelete={() => this.onDeleteCategory(category.id)}
                                 onSaveName={this.saveCategory}
                             />
                         </>
@@ -174,12 +131,14 @@ class App1 extends React.Component {
                     isAdd={isAddCategory}
                 />
                 <EditModal
-                    body={<EditTaskForm
-                        initValues={this.state.currentTask}
-                        handleSubmit={this.onSaveTask}
-                        onDelete={this.onDeleteTask}
-                        onExit={() => this.setState({isShowModal: false, currentTask: {}})}
-                    />}
+                    body={
+                        <EditTaskForm
+                            initValues={this.state.currentTask}
+                            handleSubmit={this.onSaveTask}
+                            onDelete={this.onDeleteTask}
+                            onExit={() => this.setState({isShowModal: false, currentTask: {}})}
+                        />
+                    }
                     isShowModal={isShowModal}
                 />
             </div>
